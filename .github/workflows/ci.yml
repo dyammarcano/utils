@@ -1,0 +1,38 @@
+name: CI + Unit Test
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches-ignore:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
+      - run: go version
+
+      - name: Install go/vulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+        
+      - name: Test
+        run: go test -v ./...
+        
+      - name: Go vulncheck
+        run: govulncheck ./...
+        
+      - name: Run vet tool
+        run: go vet ./...
+
+      - name: Check gofmt passes
+        run: |
+          diff -u <(echo -n) <(gofmt -d -s .)
+      
