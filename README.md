@@ -13,7 +13,7 @@ package main
 
 import (
     "fmt"
-    "github.com/dyammarcano/utils/"
+    "github.com/dyammarcano/utils"
 )
 
 type (
