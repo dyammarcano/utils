@@ -1,6 +1,6 @@
 [![CI + Unit Test](https://github.com/dyammarcano/utils/actions/workflows/ci.yml/badge.svg)](https://github.com/dyammarcano/utils/actions/workflows/ci.yml)
 
-# Binary Serialize
+# Module for my own Use, Extreme dev only
 
 ### TODO:
 
@@ -13,7 +13,7 @@ package main
 
 import (
     "fmt"
-    "github.com/dyammarcano/utils/"
+    "github.com/dyammarcano/utils"
 )
 
 type (
