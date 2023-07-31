@@ -1,10 +1,11 @@
 package util
 
 import (
-  "reflect"
-  "fmt"
+	"fmt"
+	"reflect"
 )
 
+// StructToStringFormat returns a string representation of a struct
 func StructToStringFormat(obj any) string {
 	result := ""
 	v := reflect.ValueOf(obj)

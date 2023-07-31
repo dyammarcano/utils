@@ -31,6 +31,10 @@ func GenerateRandomString(length, split int) string {
 		return string(randomChars)
 	}
 
+	if split == 0 {
+		split = 4
+	}
+
 	randomChars := make([]byte, length+(length-1)/split)
 	for i, j := 0, 0; i < length; i, j = i+1, j+1 {
 		if i > 0 && i%split == 0 {

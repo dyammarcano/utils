@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-// filepath="src/main/resources/1c24e894-3455-4790-8de5-1ddb01a1c3ad-carga_test-blocks_1.000-dev.txt"&original_name="AI7.REMS.REM1.CNDIDN.CETIP.CETPFS(+1)"&participant="ITAUBM"&family_account="73410.00-5"&datetime="2023-01-18 20:05:51"&select_platform=AZURE&operation_id="5721020"
-
+// UrlFormEncodedToObject converts a url form encoded string to a struct
 func UrlFormEncodedToObject(str string, obj any) error {
 	values, err := url.ParseQuery(str)
 	if err != nil {
