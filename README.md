@@ -4,7 +4,7 @@
 
 ### TODO:
 
-- [ ] unit test 
+- [ ] unit test
 
 ### Usage
 
