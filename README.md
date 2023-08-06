@@ -4,7 +4,7 @@
 
 ### TODO:
 
-- [ ] unit test 
+- [ ] unit test
 
 ### Usage
 
@@ -12,8 +12,8 @@
 package main
 
 import (
-    "fmt"
-    "github.com/dyammarcano/utils"
+	"fmt"
+	"github.com/dyammarcano/utils"
 )
 
 type (
@@ -30,8 +30,8 @@ type (
 )
 
 func main() {
-    // struct to serialize
-    inputData := MyStruct{
+	// struct to serialize
+	inputData := MyStruct{
 		Field1: 42,
 		Field2: "Hello, World!",
 		OtherStruct: OtherStruct{
@@ -40,22 +40,22 @@ func main() {
 		},
 	}
 
-    // serialize a struct
+	// serialize a struct
 	serializedData, err := Marshal(inputData)
-    if err != nil {
-        panic(err)
-    }
+	if err != nil {
+		panic(err)
+	}
 
-    // deserialize a string
-    var deserializedData MyStruct
+	// deserialize a string
+	var deserializedData MyStruct
 	if err := Unmarshal(serializedData, &deserializedData); err != nil {
-        panic(err)
-    }
+		panic(err)
+	}
 
-    // compare structs
-    if reflect.DeepEqual(inputData, deserializedData) {
-        fmt.Println("Structs are equal")
-    }
+	// compare structs
+	if reflect.DeepEqual(inputData, deserializedData) {
+		fmt.Println("Structs are equal")
+	}
 }
 ```
 
