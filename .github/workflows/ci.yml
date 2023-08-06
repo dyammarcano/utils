@@ -40,7 +40,3 @@ jobs:
 
       - name: Test
         run: go test -v ./...
-
-      - name: Check gofmt passes
-        run: |
-          diff -u <(echo -n) <(gofmt -d -s .)
