@@ -7,8 +7,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
-
-	"github.com/dyammarcano/utils/base58"
+	"github.com/dyammarcano/utils/encoding/base58"
 )
 
 // generateKeys generates a 32 byte master key
@@ -74,7 +73,7 @@ func AutoEncrypt(message string) (string, error) {
 	}
 
 	response = append(response, gcm.Seal(nil, nonce, []byte(message), nil)...)
-	return base58.StdEncoding.EncodeToString(response), nil
+	return base58.StdEncoding.Encode(response), nil
 }
 
 // AutoDecrypt decrypts a message using AES-256-GCM
@@ -83,7 +82,7 @@ func AutoDecrypt(message string) (string, error) {
 		return "", errors.New("message to be decrypted cannot be null or empty")
 	}
 
-	decoded, err := base58.StdEncoding.DecodeString(message)
+	decoded, err := base58.StdEncoding.Decode(message)
 	if err != nil {
 		return "", err
 	}

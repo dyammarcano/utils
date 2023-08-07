@@ -5,6 +5,7 @@ import (
 	"os"
 	"reflect"
 	"testing"
+	"time"
 )
 
 type (
@@ -72,8 +73,20 @@ func TestUnmarshalToFile(t *testing.T) {
 		return
 	}
 
-	_, err = f.Write(serializedData)
-	if err != nil {
+	// delete file after test
+	defer func() {
+		if err := f.Close(); err != nil {
+			return
+		}
+
+		<-time.After(1 * time.Second)
+
+		if err := os.Remove("test.bin"); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	if _, err = f.Write(serializedData); err != nil {
 		t.Error(err)
 		return
 	}
