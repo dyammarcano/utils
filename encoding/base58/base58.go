@@ -48,7 +48,7 @@ var (
 
 type Encoding struct{}
 
-func (enc *Encoding) EncodeToString(input []byte) string {
+func (enc *Encoding) Encode(input []byte) string {
 	if input == nil {
 		return ""
 	}
@@ -56,7 +56,7 @@ func (enc *Encoding) EncodeToString(input []byte) string {
 	return encode(input)
 }
 
-func (enc *Encoding) DecodeString(input string) ([]byte, error) {
+func (enc *Encoding) Decode(input string) ([]byte, error) {
 	var (
 		decoded []byte
 		err     error
