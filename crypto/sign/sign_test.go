@@ -2,7 +2,7 @@ package sign
 
 import (
 	"fmt"
-	"os"
+	"github.com/dyammarcano/utils/mocks"
 	"testing"
 )
 
@@ -22,14 +22,15 @@ func TestInterfaces(t *testing.T) {
 }
 
 func TestSignFile(t *testing.T) {
-	//f := mocks.NewMockFile(data)
-
-	f, err := os.Open("C:\\Users\\dyamm\\Downloads\\ojdbc11-full.tar.gz")
+	testfile, err := mocks.NewLoremTestFile(t, 10)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
-	signature := SignFile(key, f, Base64)
+	defer testfile.CleanUp()
+
+	signature := SignFile(key, testfile.File, Base64)
 	fmt.Printf("%s\n", signature)
 }
 

@@ -21,3 +21,13 @@ This is a test file.`)
 		t.Error("content is not equal")
 	}
 }
+
+func TestLorem_LoremTestFile(t *testing.T) {
+	testfile, err := NewLoremTestFile(t, 10)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	defer testfile.CleanUp()
+}

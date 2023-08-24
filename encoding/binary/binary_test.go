@@ -2,10 +2,10 @@ package binary
 
 import (
 	"fmt"
-	"os"
+	"github.com/dyammarcano/utils/mocks"
+	"path/filepath"
 	"reflect"
 	"testing"
-	"time"
 )
 
 type (
@@ -21,8 +21,10 @@ type (
 	}
 )
 
-func TestMarshal(t *testing.T) {
-	data := MyStruct{
+var mockData MyStruct
+
+func init() {
+	mockData = MyStruct{
 		Field1: 42,
 		Field2: "Hello, World!",
 		OtherStruct: OtherStruct{
@@ -30,8 +32,10 @@ func TestMarshal(t *testing.T) {
 			FieldB: true,
 		},
 	}
+}
 
-	serializedData, err := Marshal(data)
+func TestMarshal(t *testing.T) {
+	serializedData, err := Marshal(mockData)
 	if err != nil {
 		t.Error(err)
 		return
@@ -45,66 +49,41 @@ func TestMarshal(t *testing.T) {
 		return
 	}
 
-	if reflect.DeepEqual(data, deserializedData) == false {
-		t.Errorf("Expected %v, got %v", data, deserializedData)
+	if reflect.DeepEqual(mockData, deserializedData) == false {
+		t.Errorf("Expected %v, got %v", mockData, deserializedData)
 	}
 }
 
 func TestUnmarshalToFile(t *testing.T) {
-	data := MyStruct{
-		Field1: 42,
-		Field2: "Hello, World!",
-		OtherStruct: OtherStruct{
-			FieldA: 3.14159,
-			FieldB: true,
-		},
+	serializedData, err := Marshal(mockData)
+	if err != nil {
+		t.Fatal("Couldn't serialize data:", err)
 	}
 
-	serializedData, err := Marshal(data)
+	dir, err := mocks.CreateTmpDir(t)
 	if err != nil {
-		t.Error(err)
 		return
 	}
 
-	// write to file
-	f, err := os.OpenFile("test.bin", os.O_CREATE|os.O_WRONLY, 0666)
-	if err != nil {
-		t.Error(err)
+	defer mocks.CleanUpTmpDir(t, dir)
+
+	testfile := filepath.Join(dir, "data.bin")
+
+	if err := mocks.WriteToTestFile(t, testfile, serializedData); err != nil {
 		return
 	}
 
-	// delete file after test
-	defer func() {
-		if err := f.Close(); err != nil {
-			return
-		}
-
-		<-time.After(1 * time.Second)
-
-		if err := os.Remove("test.bin"); err != nil {
-			t.Error(err)
-		}
-	}()
-
-	if _, err = f.Write(serializedData); err != nil {
-		t.Error(err)
-		return
-	}
-
-	// read from file
-	f, err = os.Open("test.bin")
+	readData, err := mocks.ReadFromTestFile(t, testfile)
 	if err != nil {
-		t.Error(err)
 		return
 	}
 
 	var deserializedData MyStruct
-	if err := Unmarshal(serializedData, &deserializedData); err != nil {
-		t.Error(err)
-		return
+	if err := Unmarshal(readData, &deserializedData); err != nil {
+		t.Fatal("Failed to unmarshal to struct:", err)
 	}
 
-	if reflect.DeepEqual(data, deserializedData) == false {
-		t.Errorf("Expected %v, got %v", data, deserializedData)
+	if reflect.DeepEqual(mockData, deserializedData) == false {
+		t.Errorf("Expected %v, got %v", mockData, deserializedData)
 	}
 }
