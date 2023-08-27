@@ -6,12 +6,16 @@ import (
 	"os"
 )
 
-func encodeAndSaveToFile(config interface{}, filename string) error {
+func encodeAndSaveToFile(config any, filename string) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		if err := file.Close(); err != nil {
+			panic(err)
+		}
+	}(file)
 
 	if err := toml.NewEncoder(file).Encode(config); err != nil {
 		return err
@@ -20,7 +24,7 @@ func encodeAndSaveToFile(config interface{}, filename string) error {
 	return nil
 }
 
-func decodeFromFile(filename string, config interface{}) error {
+func decodeFromFile(filename string, config any) error {
 	_, err := toml.DecodeFile(filename, &config)
 	if err != nil {
 		return err
@@ -29,7 +33,7 @@ func decodeFromFile(filename string, config interface{}) error {
 	return nil
 }
 
-func encodeToString(config interface{}) (string, error) {
+func encodeToString(config any) (string, error) {
 	var buf bytes.Buffer
 	if err := toml.NewEncoder(&buf).Encode(config); err != nil {
 		return "", err
@@ -37,7 +41,7 @@ func encodeToString(config interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func decodeFromString(input string, config interface{}) error {
+func decodeFromString(input string, config any) error {
 	_, err := toml.Decode(input, &config)
 	if err != nil {
 		return err

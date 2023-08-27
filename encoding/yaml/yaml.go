@@ -10,7 +10,11 @@ func encodeAndSaveToFile(data interface{}, filename string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		if err := file.Close(); err != nil {
+			panic(err)
+		}
+	}(file)
 
 	encoder := yaml.NewEncoder(file)
 	return encoder.Encode(data)
@@ -21,7 +25,11 @@ func decodeFromFile(filename string, out interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		if err := file.Close(); err != nil {
+			panic(err)
+		}
+	}(file)
 
 	decoder := yaml.NewDecoder(file)
 	return decoder.Decode(out)
