@@ -22,12 +22,15 @@ type (
 	}
 )
 
+// NewMockFile creates a new mock file.
 func NewMockFile(content []byte) *MockFile {
 	return &MockFile{
 		Content: content,
+		Pos:     0,
 	}
 }
 
+// Read reads data from a mock file.
 func (mf *MockFile) Read(p []byte) (n int, err error) {
 	if mf.Pos >= len(mf.Content) {
 		return 0, io.EOF
@@ -37,6 +40,7 @@ func (mf *MockFile) Read(p []byte) (n int, err error) {
 	return n, nil
 }
 
+// Write writes data to a mock file.
 func (mf *MockFile) Write(p []byte) (n int, err error) {
 	if mf.Pos >= len(mf.Content) {
 		mf.Content = append(mf.Content, p...)
@@ -47,12 +51,9 @@ func (mf *MockFile) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func (mf *MockFile) Close() error {
-	return nil
-}
-
-func CreateTmpDir(t *testing.T) (string, error) {
-	dir, err := os.MkdirTemp("", "testdir")
+// CreateTempDir creates a temporary directory and returns the path to it.
+func CreateTempDir(t *testing.T) (string, error) {
+	dir, err := os.MkdirTemp("", "mock_")
 	if err != nil {
 		t.Fatal("Failed to create temp directory:", err)
 		return "", err
@@ -60,6 +61,22 @@ func CreateTmpDir(t *testing.T) (string, error) {
 	return dir, nil
 }
 
+// CreateTempDirCleanUp creates a temporary directory and returns the path to it, an error and a cleanup function.
+func CreateTempDirCleanUp(t *testing.T) (string, error, func()) {
+	dir, err := CreateTempDir(t)
+	if err != nil {
+		t.Fatal("Failed to create temp directory:", err)
+		return "", err, nil
+	}
+
+	return dir, nil, func() {
+		if err := os.RemoveAll(dir); err != nil {
+			t.Fatal("Failed to cleanup temp directory:", err)
+		}
+	}
+}
+
+// CleanUpTmpDir removes the temporary directory after 5 seconds.
 func CleanUpTmpDir(t *testing.T, path string) {
 	<-time.After(5 * time.Second)
 	if err := os.RemoveAll(path); err != nil {
@@ -67,6 +84,7 @@ func CleanUpTmpDir(t *testing.T, path string) {
 	}
 }
 
+// WriteToTestFile writes data to a test file.
 func WriteToTestFile(t *testing.T, testfile string, data []byte) error {
 	fw, err := os.OpenFile(testfile, os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
@@ -88,6 +106,7 @@ func WriteToTestFile(t *testing.T, testfile string, data []byte) error {
 	return nil
 }
 
+// ReadFromTestFile reads data from a test file.
 func ReadFromTestFile(t *testing.T, testfile string) ([]byte, error) {
 	fo, err := os.Open(testfile)
 	if err != nil {
@@ -110,7 +129,8 @@ func ReadFromTestFile(t *testing.T, testfile string) ([]byte, error) {
 	return readData, nil
 }
 
-func NewLoremTestFile(t *testing.T, phrases int) (*Lorem, error) {
+// NewLoremTestFile creates a test file with lorem ipsum text.
+func NewLoremTestFile(t *testing.T, phrases int) (*Lorem, error, func()) {
 	lorem := []byte("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.")
 	var data []byte
 
@@ -122,9 +142,9 @@ func NewLoremTestFile(t *testing.T, phrases int) (*Lorem, error) {
 		data = append(data, lorem...)
 	}
 
-	dir, err := CreateTmpDir(t)
+	dir, err := CreateTempDir(t)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	testfile := filepath.Join(dir, "data.bin")
@@ -132,30 +152,28 @@ func NewLoremTestFile(t *testing.T, phrases int) (*Lorem, error) {
 	fw, err := os.OpenFile(testfile, os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		t.Fatal("Could not open test file for writing:", err)
-		return nil, err
+		return nil, err, nil
 	}
 
 	if _, err = fw.Write(data); err != nil {
 		t.Fatal("Failed to write to test file:", err)
-		return nil, err
+		return nil, err, nil
 	}
 
 	return &Lorem{
-		LoremFilePath: testfile,
-		d:             dir,
-		t:             t,
-		File:          fw,
-	}, nil
-}
+			LoremFilePath: testfile,
+			d:             dir,
+			t:             t,
+			File:          fw,
+		}, nil, func() {
+			if err := fw.Close(); err != nil {
+				t.Fatal("Failed to close test file:", err)
+			}
 
-func (l *Lorem) CleanUp() {
-	if err := l.File.Close(); err != nil {
-		l.t.Fatal("Failed to close test file:", err)
-	}
+			<-time.After(100 * time.Millisecond)
 
-	<-time.After(100 * time.Millisecond)
-
-	if err := os.RemoveAll(l.d); err != nil {
-		l.t.Fatal("Failed to cleanup temp directory:", err)
-	}
+			if err := os.RemoveAll(dir); err != nil {
+				t.Fatal("Failed to cleanup temp directory:", err)
+			}
+		}
 }

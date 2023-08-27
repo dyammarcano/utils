@@ -21,8 +21,6 @@ func TestEncrypt(t *testing.T) {
 		t.Errorf("Encrypt() error = %v", err)
 		return
 	}
-
-	t.Logf("Message: %s\nEncrypted: %s\nDecrypted: %s", str, encrypted, decrypted)
 }
 
 func TestDecrypt(t *testing.T) {
@@ -35,5 +33,8 @@ func TestDecrypt(t *testing.T) {
 		return
 	}
 
-	t.Logf("Message: %s\nEncrypted: %s\nDecrypted: %s", str, encrypted, decrypted)
+	if decrypted != str {
+		t.Errorf("Decrypt() error = %v", err)
+		return
+	}
 }

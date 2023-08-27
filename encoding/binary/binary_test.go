@@ -1,7 +1,6 @@
 package binary
 
 import (
-	"fmt"
 	"github.com/dyammarcano/utils/mocks"
 	"path/filepath"
 	"reflect"
@@ -41,8 +40,6 @@ func TestMarshal(t *testing.T) {
 		return
 	}
 
-	t.Log(fmt.Sprintf("%v", serializedData))
-
 	var deserializedData MyStruct
 	if err := Unmarshal(serializedData, &deserializedData); err != nil {
 		t.Error(err)
@@ -60,7 +57,7 @@ func TestUnmarshalToFile(t *testing.T) {
 		t.Fatal("Couldn't serialize data:", err)
 	}
 
-	dir, err := mocks.CreateTmpDir(t)
+	dir, err := mocks.CreateTempDir(t)
 	if err != nil {
 		return
 	}

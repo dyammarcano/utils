@@ -22,13 +22,13 @@ func TestInterfaces(t *testing.T) {
 }
 
 func TestSignFile(t *testing.T) {
-	testfile, err := mocks.NewLoremTestFile(t, 10)
+	testfile, err, cleanup := mocks.NewLoremTestFile(t, 10)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	defer testfile.CleanUp()
+	defer cleanup()
 
 	signature := SignFile(key, testfile.File, Base64)
 	fmt.Printf("%s\n", signature)
