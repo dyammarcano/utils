@@ -1,4 +1,4 @@
-package printer
+package display
 
 import (
 	"fmt"
@@ -39,7 +39,7 @@ func printDir(dirName, indent string, isLast bool) {
 	fmt.Printf("%s%s%s\n", indent, prefix, dirName)
 }
 
-func PrintDirectoryTree(rootPath string) error {
+func DisplayDirectoryTree(rootPath string) error {
 	fmt.Println(rootPath)
 	return printFileSystemTree(rootPath, "")
 }

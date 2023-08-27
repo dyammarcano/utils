@@ -1,4 +1,4 @@
-package printer
+package display
 
 import (
 	"github.com/dyammarcano/utils/mocks"
@@ -60,7 +60,7 @@ func TestPrintDirectoryTree(t *testing.T) {
 	dir, cleanup := TempDirectoryWithFiles(t)
 	defer cleanup()
 
-	if err := PrintDirectoryTree(dir); err != nil {
+	if err := DisplayDirectoryTree(dir); err != nil {
 		t.Fatal(err)
 	}
 }
