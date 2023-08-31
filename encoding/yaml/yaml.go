@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func encodeAndSaveToFile(data interface{}, filename string) error {
+func encodeAndSaveToFile(data any, filename string) error {
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func encodeAndSaveToFile(data interface{}, filename string) error {
 	return encoder.Encode(data)
 }
 
-func decodeFromFile(filename string, out interface{}) error {
+func decodeFromFile(filename string, out any) error {
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
@@ -35,11 +35,11 @@ func decodeFromFile(filename string, out interface{}) error {
 	return decoder.Decode(out)
 }
 
-func encodeToString(data interface{}) (string, error) {
+func encodeToString(data any) (string, error) {
 	bytes, err := yaml.Marshal(data)
 	return string(bytes), err
 }
 
-func decodeFromString(input string, out interface{}) error {
+func decodeFromString(input string, out any) error {
 	return yaml.Unmarshal([]byte(input), out)
 }
