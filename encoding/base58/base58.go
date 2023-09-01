@@ -48,6 +48,10 @@ var (
 
 type Encoding struct{}
 
+func (enc *Encoding) EncodeString(input string) string {
+	enc.Encode([]byte(input))
+}
+
 func (enc *Encoding) Encode(input []byte) string {
 	if input == nil {
 		return ""
