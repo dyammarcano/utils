@@ -48,7 +48,7 @@ var (
 
 type Encoding struct{}
 
-func (enc *Encoding) EncodeString(input string) string {
+func (enc *Encoding) EncodeToString(input string) string {
 	enc.Encode([]byte(input))
 }
 
