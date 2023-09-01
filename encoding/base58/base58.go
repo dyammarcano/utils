@@ -60,6 +60,11 @@ func (enc *Encoding) Encode(input []byte) string {
 	return encode(input)
 }
 
+func (enc *Encoding) DecodeString(input string) (string, error) {
+	data, err := enc.Decode(input)
+	return string(data), err
+}
+
 func (enc *Encoding) Decode(input string) ([]byte, error) {
 	var (
 		decoded []byte
