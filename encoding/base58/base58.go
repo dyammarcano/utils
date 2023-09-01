@@ -49,7 +49,7 @@ var (
 type Encoding struct{}
 
 func (enc *Encoding) EncodeToString(input string) string {
-	enc.Encode([]byte(input))
+	return enc.Encode([]byte(input))
 }
 
 func (enc *Encoding) Encode(input []byte) string {
