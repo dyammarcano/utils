@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/google/uuid v1.3.0
 	github.com/oklog/ulid/v2 v2.1.0
+	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.3
 	go.uber.org/zap v1.24.0

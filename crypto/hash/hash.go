@@ -1,11 +1,11 @@
 package hash
 
 type (
-	HashType int
+	Hash int
 )
 
 const (
-	MD5 HashType = iota
+	MD5 Hash = iota
 	SHA1
 	SHA256
 	SHA512

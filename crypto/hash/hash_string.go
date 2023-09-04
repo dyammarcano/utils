@@ -12,7 +12,7 @@ import (
 )
 
 // HashString returns the hash of the data.
-func HashString(str string, hashType HashType) string {
+func HashString(str string, hashType Hash) string {
 	data := []byte(str)
 
 	switch hashType {

@@ -5,7 +5,7 @@ import (
 )
 
 // HashFile returns the hash of the file at the given path.
-func HashFile(file io.Reader, hashType HashType) string {
+func HashFile(file io.Reader, hashType Hash) string {
 	data := readFile(file)
 
 	switch hashType {
